@@ -1,0 +1,21 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#55FFFFFF" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip android:clipOrientation="horizontal" android:gravity="left">
+            <vector
+                android:width="240dp"
+                android:height="8dp"
+                android:viewportWidth="240"
+                android:viewportHeight="8">
+                <path
+                    android:fillColor="@color/red_accent"
+                    android:pathData="M0,4 C12,0 24,8 36,4 C48,0 60,8 72,4 C84,0 96,8 108,4 C120,0 132,8 144,4 C156,0 168,8 180,4 C192,0 204,8 216,4 C228,0 236,7 240,4 L240,8 L0,8 Z" />
+            </vector>
+        </clip>
+    </item>
+</layer-list>

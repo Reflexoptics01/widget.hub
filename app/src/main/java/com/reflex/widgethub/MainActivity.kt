@@ -27,6 +27,8 @@ import com.reflex.widgethub.reminders.ReminderScheduler
 import com.reflex.widgethub.reminders.ReminderSettings
 import com.reflex.widgethub.reminders.ReminderStore
 import com.reflex.widgethub.reminders.ReminderType
+import com.reflex.widgethub.playlist.PlaylistResumeStore
+import com.reflex.widgethub.playlist.PlaylistResumeWidgetProvider
 import com.reflex.widgethub.ui.completedCycleLabel
 import com.reflex.widgethub.ui.compactCountLabel
 import com.reflex.widgethub.ui.expressiveProgress
@@ -179,6 +181,12 @@ class MainActivity : AppCompatActivity() {
         note.setPadding(dp(4), dp(10), dp(4), 0)
         content.addView(note, fullWidth())
 
+        content.addView(sectionTitle("PLAYLIST RESUME"), fullWidth().apply {
+            topMargin = dp(34)
+            bottomMargin = dp(10)
+        })
+        content.addView(playlistResumeCard(), fullWidth())
+
         setContentView(root)
         ViewCompat.requestApplyInsets(root)
     }
@@ -228,6 +236,77 @@ class MainActivity : AppCompatActivity() {
             button.text = formatTime(updated)
             if (updated.enabled) scheduler.schedule(type, updated)
         }, current.hour, current.minute, false).show()
+    }
+
+    private fun playlistResumeCard(): View {
+        val store = PlaylistResumeStore(this)
+        val state = store.load()
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(18), dp(16), dp(18), dp(16))
+            setBackgroundResource(R.drawable.bg_expressive_card)
+        }
+        val savedTitle = label(
+            state.title.ifBlank { "Share a video to save your current episode" },
+            14f,
+            android.graphics.Color.WHITE
+        )
+        savedTitle.maxLines = 2
+        savedTitle.ellipsize = android.text.TextUtils.TruncateAt.END
+        card.addView(savedTitle, fullWidth())
+        card.addView(label(
+            "Use ReVanced Share → Save to Playlist Resume. No login or background monitoring.",
+            11f,
+            getColorCompat(R.color.text_muted)
+        ), fullWidth().apply { topMargin = dp(5) })
+
+        val episodeRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        episodeRow.addView(label("STARTING EPISODE", 11f, getColorCompat(R.color.text_muted)), LinearLayout.LayoutParams(0, dp(46), 1f))
+        val indexInput = android.widget.EditText(this).apply {
+            setText(state.index.toString())
+            setTextColor(android.graphics.Color.WHITE)
+            textSize = 14f
+            gravity = Gravity.CENTER
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            setSelectAllOnFocus(true)
+            background = getDrawableCompat(R.drawable.bg_control)
+            setPadding(dp(12), 0, dp(12), 0)
+        }
+        episodeRow.addView(indexInput, LinearLayout.LayoutParams(dp(92), dp(46)).apply { leftMargin = dp(10) })
+        card.addView(episodeRow, fullWidth().apply { topMargin = dp(14) })
+
+        val setButton = Button(this).apply {
+            text = "SET STARTING EPISODE"
+            textSize = 11f
+            setTextColor(android.graphics.Color.WHITE)
+            background = getDrawableCompat(R.drawable.bg_expressive_control)
+            stateListAnimator = null
+            setOnClickListener {
+                val index = indexInput.text.toString().toIntOrNull() ?: return@setOnClickListener
+                store.setStartingIndex(index)
+                PlaylistResumeWidgetProvider.refreshAllWidgets(this@MainActivity)
+            }
+        }
+        card.addView(setButton, LinearLayout.LayoutParams(-1, dp(46)).apply { topMargin = dp(10) })
+
+        val clearButton = Button(this).apply {
+            text = "CLEAR SAVED EPISODE"
+            textSize = 11f
+            setTextColor(android.graphics.Color.WHITE)
+            background = getDrawableCompat(R.drawable.bg_control)
+            stateListAnimator = null
+            setOnClickListener {
+                store.clear()
+                savedTitle.text = "Share a video to save your current episode"
+                indexInput.setText("1")
+                PlaylistResumeWidgetProvider.refreshAllWidgets(this@MainActivity)
+            }
+        }
+        card.addView(clearButton, LinearLayout.LayoutParams(-1, dp(46)).apply { topMargin = dp(8) })
+        return card
     }
 
     private fun showGoalPicker() {

@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:theme="@style/Theme.WidgetHub"
@@ -17,6 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".playlist.PlaylistResumeShareActivity"
+            android:exported="true"
+            android:label="@string/playlist_resume_share_label"
+            android:theme="@style/Theme.WidgetHub.Share">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <receiver android:name=".TasbeehWidgetProvider" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -25,6 +37,15 @@
                 <action android:name="com.reflex.widgethub.action.OPEN_APP" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/tasbeeh_widget_info" />
+        </receiver>
+        <receiver android:name=".playlist.PlaylistResumeWidgetProvider" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.reflex.widgethub.playlist.RESUME" />
+                <action android:name="com.reflex.widgethub.playlist.NEXT" />
+                <action android:name="com.reflex.widgethub.playlist.CLEAR" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/playlist_resume_widget_info" />
         </receiver>
         <receiver android:name=".reminders.ReminderReceiver" android:exported="false" />
         <receiver android:name=".reminders.BootReceiver" android:enabled="true" android:exported="false">

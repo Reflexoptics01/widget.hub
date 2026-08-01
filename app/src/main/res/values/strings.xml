@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Tadabbur.widget</string>
     <string name="tasbeeh_widget_description">Tadabbur tasbeeh counter</string>
+    <string name="playlist_resume_widget_description">Playlist Resume</string>
+    <string name="playlist_resume_share_label">Save to Playlist Resume</string>
 </resources>

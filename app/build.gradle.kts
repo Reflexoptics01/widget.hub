@@ -12,8 +12,8 @@ android {
         applicationId = "com.reflex.widgethub"
         minSdk = 23
         targetSdk = 35
-        versionCode = 10
-        versionName = "10.0-ui-polish-haptics"
+        versionCode = 11
+        versionName = "11.0-playlist-resume"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,5 +38,7 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+    implementation("androidx.collection:collection:1.1.0")
     testImplementation(kotlin("test"))
 }
