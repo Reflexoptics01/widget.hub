@@ -12,8 +12,8 @@ android {
         applicationId = "com.reflex.widgethub"
         minSdk = 23
         targetSdk = 35
-        versionCode = 8
-        versionName = "8.0-tadabbur-widget"
+        versionCode = 9
+        versionName = "9.0-compact-count-vibration"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

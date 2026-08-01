@@ -28,7 +28,7 @@ import com.reflex.widgethub.reminders.ReminderSettings
 import com.reflex.widgethub.reminders.ReminderStore
 import com.reflex.widgethub.reminders.ReminderType
 import com.reflex.widgethub.ui.completedCycleLabel
-import com.reflex.widgethub.ui.cycleHeaderLabel
+import com.reflex.widgethub.ui.compactCountLabel
 import com.reflex.widgethub.ui.expressiveProgress
 import com.reflex.widgethub.ui.isGoalPulse
 
@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scheduler: ReminderScheduler
     private lateinit var lifetimeValue: TextView
     private lateinit var cycleValue: TextView
-    private lateinit var cycleHeaderValue: TextView
     private lateinit var currentValue: TextView
     private lateinit var goalButton: Button
     private lateinit var progressBar: ProgressBar
@@ -103,13 +102,6 @@ class MainActivity : AppCompatActivity() {
         }
         summary.addView(cycleValue, LinearLayout.LayoutParams(dp(54), -1))
         content.addView(summary, fullWidth().apply { topMargin = dp(12) })
-
-        cycleHeaderValue = label("GOAL 33 • +0 CYCLES", 12f, getColorCompat(R.color.red_accent)).apply {
-            gravity = Gravity.CENTER
-            letterSpacing = 0.08f
-            setPadding(0, dp(24), 0, 0)
-        }
-        content.addView(cycleHeaderValue, fullWidth())
 
         currentValue = label("0", 72f, android.graphics.Color.WHITE).apply {
             gravity = Gravity.CENTER
@@ -249,8 +241,8 @@ class MainActivity : AppCompatActivity() {
         currentValue.text = state.currentCount.toString()
         lifetimeValue.text = state.lifetimeTotal.toString()
         goalButton.text = "GOAL ${state.goal}"
-        cycleHeaderValue.text = cycleHeaderLabel(state)
         cycleValue.text = completedCycleLabel(state) ?: "+0"
+        currentValue.text = compactCountLabel(state)
         progressBar.progress = expressiveProgress(state)
         animateCount(state)
     }

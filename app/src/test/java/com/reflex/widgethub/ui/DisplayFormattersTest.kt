@@ -17,12 +17,13 @@ class DisplayFormattersTest {
     }
 
     @Test
-    fun formats_goal_and_completed_cycle_header() {
-        assertEquals("GOAL 33 • +1 CYCLE", cycleHeaderLabel(CounterState(34, 33, 500)))
+    fun formats_exact_goal_without_raw_next_number() {
+        assertEquals("33", compactCountLabel(CounterState(33, 33, 33)))
     }
 
     @Test
-    fun formats_zero_cycle_header_before_goal_completion() {
-        assertEquals("GOAL 33 • +0 CYCLES", cycleHeaderLabel(CounterState(32, 33, 500)))
+    fun formats_extra_taps_as_superscript_remainder() {
+        assertEquals("33⁺¹", compactCountLabel(CounterState(34, 33, 34)))
+        assertEquals("33⁺¹³", compactCountLabel(CounterState(46, 33, 46)))
     }
 }
