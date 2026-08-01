@@ -54,6 +54,7 @@ class PlaylistResumeWidgetProvider : AppWidgetProvider() {
                     ?.let { views.setImageViewBitmap(R.id.playlist_art, it) }
             }
             views.setProgressBar(R.id.playlist_progress, 100, 0, true)
+            views.setOnClickPendingIntent(R.id.playlist_root, broadcast(context, ACTION_RESUME, id))
             views.setOnClickPendingIntent(R.id.playlist_resume, broadcast(context, ACTION_RESUME, id))
             views.setOnClickPendingIntent(R.id.playlist_next, broadcast(context, ACTION_NEXT, id))
             views.setOnClickPendingIntent(R.id.playlist_clear, broadcast(context, ACTION_CLEAR, id))
