@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
@@ -27,6 +28,8 @@ import com.reflex.widgethub.reminders.ReminderSettings
 import com.reflex.widgethub.reminders.ReminderStore
 import com.reflex.widgethub.reminders.ReminderType
 import com.reflex.widgethub.ui.completedCycleLabel
+import com.reflex.widgethub.ui.expressiveProgress
+import com.reflex.widgethub.ui.isGoalPulse
 
 class MainActivity : AppCompatActivity() {
     private lateinit var counterStore: CounterStore
@@ -36,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cycleValue: TextView
     private lateinit var currentValue: TextView
     private lateinit var goalValue: TextView
+    private lateinit var progressBar: ProgressBar
     private lateinit var root: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dp(16), dp(14), dp(16), dp(14))
-            setBackgroundColor(android.graphics.Color.rgb(22, 22, 22))
+            setBackgroundResource(R.drawable.bg_expressive_card)
         }
         val lifetimeBlock = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         lifetimeBlock.addView(label("LIFETIME TOTAL", 11f, android.graphics.Color.GRAY))
@@ -98,29 +102,48 @@ class MainActivity : AppCompatActivity() {
         summary.addView(cycleValue, LinearLayout.LayoutParams(dp(54), -1))
         content.addView(summary, fullWidth().apply { topMargin = dp(12) })
 
-        currentValue = label("0", 68f, android.graphics.Color.WHITE).apply {
+        currentValue = label("0", 72f, android.graphics.Color.WHITE).apply {
             gravity = Gravity.CENTER
             setPadding(0, dp(20), 0, dp(4))
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
         }
         content.addView(currentValue, fullWidth())
         val reciteLabel = label("CURRENT COUNT", 11f, android.graphics.Color.GRAY).apply {
             gravity = Gravity.CENTER
         }
         content.addView(reciteLabel, fullWidth())
+        progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = 0
+            progressTintList = android.content.res.ColorStateList.valueOf(getColorCompat(R.color.red_accent))
+            progressBackgroundTintList = android.content.res.ColorStateList.valueOf(getColorCompat(R.color.surface_high))
+        }
+        content.addView(progressBar, fullWidth().apply {
+            topMargin = dp(16)
+            leftMargin = dp(18)
+            rightMargin = dp(18)
+        })
 
         val controls = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
         }
-        val goalButton = Button(this).apply { setTextColor(android.graphics.Color.WHITE); textSize = 12f }
+        val goalButton = Button(this).apply {
+            text = "GOAL"
+            setTextColor(android.graphics.Color.WHITE)
+            textSize = 12f
+            background = getDrawableCompat(R.drawable.bg_control)
+            stateListAnimator = null
+        }
         goalValue = label("GOAL 33", 12f, android.graphics.Color.WHITE).apply { gravity = Gravity.CENTER }
-        goalButton.text = "GOAL"
         goalButton.setOnClickListener { showGoalPicker() }
         controls.addView(goalButton, LinearLayout.LayoutParams(0, dp(48), 1f))
         val tapButton = Button(this).apply {
             text = "RECITE +1"
             textSize = 13f
             setTextColor(android.graphics.Color.WHITE)
+            background = getDrawableCompat(R.drawable.bg_expressive_control)
+            stateListAnimator = null
             setOnClickListener { counterStore.update(::increment).also { renderCounter(it); TasbeehWidgetProvider.refreshAllWidgets(this@MainActivity) } }
         }
         controls.addView(tapButton, LinearLayout.LayoutParams(0, dp(48), 1.2f))
@@ -128,6 +151,8 @@ class MainActivity : AppCompatActivity() {
             text = "RESET"
             textSize = 12f
             setTextColor(android.graphics.Color.WHITE)
+            background = getDrawableCompat(R.drawable.bg_control)
+            stateListAnimator = null
             setOnClickListener { counterStore.update(::resetCurrent).also { renderCounter(it); TasbeehWidgetProvider.refreshAllWidgets(this@MainActivity) } }
         }
         controls.addView(resetButton, LinearLayout.LayoutParams(0, dp(48), 1f))
@@ -150,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         val card = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
-            setBackgroundColor(android.graphics.Color.rgb(22, 22, 22))
+            setBackgroundResource(R.drawable.bg_expressive_card)
         }
         val top = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
         val textBlock = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -172,6 +197,8 @@ class MainActivity : AppCompatActivity() {
             text = formatTime(settings)
             textSize = 12f
             setTextColor(android.graphics.Color.WHITE)
+            background = getDrawableCompat(R.drawable.bg_control)
+            stateListAnimator = null
             setOnClickListener { showTimePicker(type, timeButton) }
         }
         card.addView(timeButton, LinearLayout.LayoutParams(-1, dp(42)).apply { topMargin = dp(8) })
@@ -216,6 +243,23 @@ class MainActivity : AppCompatActivity() {
         lifetimeValue.text = state.lifetimeTotal.toString()
         goalValue.text = "GOAL ${state.goal}"
         cycleValue.text = completedCycleLabel(state).orEmpty()
+        progressBar.progress = expressiveProgress(state)
+        animateCount(state)
+    }
+
+    private fun animateCount(state: CounterState) {
+        currentValue.animate().cancel()
+        currentValue.scaleX = 0.92f
+        currentValue.scaleY = 0.92f
+        currentValue.animate().scaleX(1f).scaleY(1f).setDuration(220).start()
+        if (isGoalPulse(state)) {
+            currentValue.setTextColor(getColorCompat(R.color.red_accent))
+            currentValue.animate().setDuration(360).withEndAction {
+                currentValue.setTextColor(android.graphics.Color.WHITE)
+            }.start()
+        } else {
+            currentValue.setTextColor(android.graphics.Color.WHITE)
+        }
     }
 
     private fun requestNotificationPermissionIfNeeded() {
@@ -228,6 +272,7 @@ class MainActivity : AppCompatActivity() {
     private fun fullWidth() = LinearLayout.LayoutParams(-1, -2)
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
     private fun getColorCompat(id: Int) = androidx.core.content.ContextCompat.getColor(this, id)
+    private fun getDrawableCompat(id: Int) = androidx.core.content.ContextCompat.getDrawable(this, id)
 
     companion object {
         const val EXTRA_OPEN_REMINDER = "open_reminder"

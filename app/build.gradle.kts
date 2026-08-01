@@ -12,8 +12,8 @@ android {
         applicationId = "com.reflex.widgethub"
         minSdk = 23
         targetSdk = 35
-        versionCode = 6
-        versionName = "6.0-lifetime-reminders"
+        versionCode = 7
+        versionName = "7.0-material-you-nothing"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -22,6 +22,10 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+
+    lint {
+        checkReleaseBuilds = false
     }
 
     compileOptions {

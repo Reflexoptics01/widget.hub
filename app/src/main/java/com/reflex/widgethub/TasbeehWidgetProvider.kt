@@ -11,6 +11,7 @@ import com.reflex.widgethub.data.CounterStore
 import com.reflex.widgethub.domain.CounterState
 import com.reflex.widgethub.domain.increment
 import com.reflex.widgethub.domain.resetCurrent
+import com.reflex.widgethub.ui.expressiveProgress
 
 class TasbeehWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
@@ -45,17 +46,12 @@ class TasbeehWidgetProvider : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_tasbeeh)
             views.setTextViewText(R.id.widget_count, state.currentCount.toString())
             views.setTextViewText(R.id.widget_goal, "GOAL ${state.goal}")
-            views.setProgressBar(R.id.widget_progress, 100, progress(state), false)
+            views.setProgressBar(R.id.widget_progress, 100, expressiveProgress(state), false)
             views.setOnClickPendingIntent(R.id.widget_count, broadcast(context, ACTION_INCREMENT, id))
             views.setOnClickPendingIntent(R.id.widget_progress, broadcast(context, ACTION_INCREMENT, id))
             views.setOnClickPendingIntent(R.id.widget_reset, broadcast(context, ACTION_RESET, id))
             views.setOnClickPendingIntent(R.id.widget_goal, broadcast(context, ACTION_OPEN_APP, id))
             manager.updateAppWidget(id, views)
-        }
-
-        private fun progress(state: CounterState): Int {
-            val goal = state.goal.coerceAtLeast(1)
-            return ((state.currentCount % goal) * 100 / goal).toInt()
         }
 
         private fun broadcast(context: Context, action: String, widgetId: Int): PendingIntent {

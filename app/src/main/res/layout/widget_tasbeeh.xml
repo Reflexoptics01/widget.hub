@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="12dp"
     android:background="@color/black">
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,15 +14,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="GOAL 33"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textColor="@color/red_accent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:paddingStart="6dp"
+            android:background="@drawable/bg_control" />
         <ImageButton
             android:id="@+id/widget_reset"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:background="@android:color/transparent"
             android:contentDescription="Reset"
-            android:src="@android:drawable/ic_menu_revert" />
+            android:src="@android:drawable/ic_menu_revert"
+            android:tint="@color/red_accent" />
     </LinearLayout>
     <TextView
         android:id="@+id/widget_count"
@@ -32,14 +37,16 @@
         android:gravity="center"
         android:text="0"
         android:textColor="@color/white"
-        android:textSize="38sp"
+        android:textSize="42sp"
+        android:textStyle="bold"
         android:fontFamily="sans" />
     <ProgressBar
         android:id="@+id/widget_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="6dp"
         android:max="100"
         android:progress="0"
-        android:progressTint="@color/red_accent" />
+        android:progressTint="@color/red_accent"
+        android:backgroundTint="#2A2A2A" />
 </LinearLayout>

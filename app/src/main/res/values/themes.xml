@@ -4,7 +4,10 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:colorAccent">@color/red_accent</item>
+        <item name="colorAccent">@color/red_accent</item>
     </style>
 </resources>
