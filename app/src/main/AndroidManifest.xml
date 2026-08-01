@@ -6,6 +6,8 @@
     <application
         android:theme="@style/Theme.WidgetHub"
         android:label="@string/app_name"
+        android:icon="@drawable/ic_tadabbur_icon"
+        android:roundIcon="@drawable/ic_tadabbur_icon"
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity android:name=".MainActivity" android:exported="true">

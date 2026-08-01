@@ -28,6 +28,7 @@ import com.reflex.widgethub.reminders.ReminderSettings
 import com.reflex.widgethub.reminders.ReminderStore
 import com.reflex.widgethub.reminders.ReminderType
 import com.reflex.widgethub.ui.completedCycleLabel
+import com.reflex.widgethub.ui.cycleHeaderLabel
 import com.reflex.widgethub.ui.expressiveProgress
 import com.reflex.widgethub.ui.isGoalPulse
 
@@ -37,8 +38,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scheduler: ReminderScheduler
     private lateinit var lifetimeValue: TextView
     private lateinit var cycleValue: TextView
+    private lateinit var cycleHeaderValue: TextView
     private lateinit var currentValue: TextView
-    private lateinit var goalValue: TextView
+    private lateinit var goalButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var root: LinearLayout
 
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         scroll.addView(content)
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
 
-        val title = label("TASBEEH", 13f, android.graphics.Color.LTGRAY).apply {
+        val title = label("TADABBUR.WIDGET", 13f, android.graphics.Color.LTGRAY).apply {
             letterSpacing = 0.18f
         }
         content.addView(title, fullWidth())
@@ -101,6 +103,13 @@ class MainActivity : AppCompatActivity() {
         }
         summary.addView(cycleValue, LinearLayout.LayoutParams(dp(54), -1))
         content.addView(summary, fullWidth().apply { topMargin = dp(12) })
+
+        cycleHeaderValue = label("GOAL 33 • +0 CYCLES", 12f, getColorCompat(R.color.red_accent)).apply {
+            gravity = Gravity.CENTER
+            letterSpacing = 0.08f
+            setPadding(0, dp(24), 0, 0)
+        }
+        content.addView(cycleHeaderValue, fullWidth())
 
         currentValue = label("0", 72f, android.graphics.Color.WHITE).apply {
             gravity = Gravity.CENTER
@@ -128,14 +137,13 @@ class MainActivity : AppCompatActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
         }
-        val goalButton = Button(this).apply {
+        goalButton = Button(this).apply {
             text = "GOAL"
             setTextColor(android.graphics.Color.WHITE)
             textSize = 12f
             background = getDrawableCompat(R.drawable.bg_control)
             stateListAnimator = null
         }
-        goalValue = label("GOAL 33", 12f, android.graphics.Color.WHITE).apply { gravity = Gravity.CENTER }
         goalButton.setOnClickListener { showGoalPicker() }
         controls.addView(goalButton, LinearLayout.LayoutParams(0, dp(48), 1f))
         val tapButton = Button(this).apply {
@@ -157,7 +165,6 @@ class MainActivity : AppCompatActivity() {
         }
         controls.addView(resetButton, LinearLayout.LayoutParams(0, dp(48), 1f))
         content.addView(controls, fullWidth().apply { topMargin = dp(12) })
-        content.addView(goalValue, fullWidth().apply { topMargin = dp(4) })
 
         content.addView(sectionTitle("DAILY REMINDERS"), fullWidth().apply { topMargin = dp(28) })
         content.addView(reminderRow(ReminderType.TASBIH_FATIMA, "Tasbih-e-Fatima", "Subhan Allah 33 • Alhamdulillah 33 • Allahu Akbar 34"), fullWidth())
@@ -241,8 +248,9 @@ class MainActivity : AppCompatActivity() {
         if (!::currentValue.isInitialized) return
         currentValue.text = state.currentCount.toString()
         lifetimeValue.text = state.lifetimeTotal.toString()
-        goalValue.text = "GOAL ${state.goal}"
-        cycleValue.text = completedCycleLabel(state).orEmpty()
+        goalButton.text = "GOAL ${state.goal}"
+        cycleHeaderValue.text = cycleHeaderLabel(state)
+        cycleValue.text = completedCycleLabel(state) ?: "+0"
         progressBar.progress = expressiveProgress(state)
         animateCount(state)
     }

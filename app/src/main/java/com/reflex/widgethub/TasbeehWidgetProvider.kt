@@ -12,6 +12,7 @@ import com.reflex.widgethub.domain.CounterState
 import com.reflex.widgethub.domain.increment
 import com.reflex.widgethub.domain.resetCurrent
 import com.reflex.widgethub.ui.expressiveProgress
+import com.reflex.widgethub.ui.cycleHeaderLabel
 
 class TasbeehWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
@@ -46,6 +47,7 @@ class TasbeehWidgetProvider : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.widget_tasbeeh)
             views.setTextViewText(R.id.widget_count, state.currentCount.toString())
             views.setTextViewText(R.id.widget_goal, "GOAL ${state.goal}")
+            views.setTextViewText(R.id.widget_cycle, cycleHeaderLabel(state))
             views.setProgressBar(R.id.widget_progress, 100, expressiveProgress(state), false)
             views.setOnClickPendingIntent(R.id.widget_count, broadcast(context, ACTION_INCREMENT, id))
             views.setOnClickPendingIntent(R.id.widget_progress, broadcast(context, ACTION_INCREMENT, id))

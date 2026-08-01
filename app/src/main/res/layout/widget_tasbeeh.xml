@@ -30,6 +30,16 @@
             android:tint="@color/red_accent" />
     </LinearLayout>
     <TextView
+        android:id="@+id/widget_cycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:text="GOAL 33 • +0 CYCLES"
+        android:textColor="@color/red_accent"
+        android:textSize="9sp"
+        android:textStyle="bold" />
+    <TextView
         android:id="@+id/widget_count"
         android:layout_width="match_parent"
         android:layout_height="0dp"

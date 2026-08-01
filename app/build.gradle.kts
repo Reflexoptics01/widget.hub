@@ -12,8 +12,8 @@ android {
         applicationId = "com.reflex.widgethub"
         minSdk = 23
         targetSdk = 35
-        versionCode = 7
-        versionName = "7.0-material-you-nothing"
+        versionCode = 8
+        versionName = "8.0-tadabbur-widget"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
