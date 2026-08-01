@@ -12,8 +12,8 @@ android {
         applicationId = "com.reflex.widgethub"
         minSdk = 23
         targetSdk = 35
-        versionCode = 9
-        versionName = "9.0-compact-count-vibration"
+        versionCode = 10
+        versionName = "10.0-ui-polish-haptics"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

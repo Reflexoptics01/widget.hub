@@ -11,10 +11,12 @@ import com.reflex.widgethub.data.CounterStore
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.VibratorManager
 import com.reflex.widgethub.domain.increment
 import com.reflex.widgethub.domain.resetCurrent
 import com.reflex.widgethub.ui.expressiveProgress
 import com.reflex.widgethub.ui.compactCountLabel
+import com.reflex.widgethub.ui.hapticDurationMillis
 
 class TasbeehWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
@@ -66,12 +68,18 @@ class TasbeehWidgetProvider : AppWidgetProvider() {
         }
 
         private fun vibrate(context: Context, state: com.reflex.widgethub.domain.CounterState) {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator ?: return
+            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                context.getSystemService(VibratorManager::class.java)?.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+            } ?: return
+            if (!vibrator.hasVibrator()) return
             val goal = state.goal.coerceAtLeast(1)
             val goalReached = state.currentCount > 0 && state.currentCount % goal == 0L
-            val duration = if (goalReached) 90L else 18L
+            val duration = hapticDurationMillis(goalReached)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val amplitude = if (goalReached) 180 else 70
+                val amplitude = if (goalReached) 255 else 160
                 vibrator.vibrate(VibrationEffect.createOneShot(duration, amplitude))
             } else {
                 @Suppress("DEPRECATION")

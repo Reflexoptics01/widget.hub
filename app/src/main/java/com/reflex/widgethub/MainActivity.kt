@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(android.graphics.Color.BLACK)
-            setPadding(dp(20), 0, dp(20), 0)
+            setPadding(dp(16), 0, dp(16), 0)
         }
         val baseLeft = root.paddingLeft
         val baseRight = root.paddingRight
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         val scroll = ScrollView(this).apply { isFillViewport = true }
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(0, dp(18), 0, dp(24))
+            setPadding(0, dp(24), 0, dp(32))
         }
         scroll.addView(content)
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
@@ -84,35 +84,38 @@ class MainActivity : AppCompatActivity() {
         val title = label("TADABBUR.WIDGET", 13f, android.graphics.Color.LTGRAY).apply {
             letterSpacing = 0.18f
         }
-        content.addView(title, fullWidth())
+        content.addView(title, fullWidth().apply { bottomMargin = dp(4) })
+        content.addView(label("A quiet counter for mindful remembrance", 11f, getColorCompat(R.color.text_dim)), fullWidth())
 
         val summary = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(16), dp(14), dp(16), dp(14))
+            setPadding(dp(18), dp(16), dp(18), dp(16))
             setBackgroundResource(R.drawable.bg_expressive_card)
         }
         val lifetimeBlock = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        lifetimeBlock.addView(label("LIFETIME TOTAL", 11f, android.graphics.Color.GRAY))
-        lifetimeValue = label("0", 24f, android.graphics.Color.WHITE)
+        lifetimeBlock.addView(label("LIFETIME TOTAL", 11f, getColorCompat(R.color.text_muted)))
+        lifetimeValue = label("0", 28f, android.graphics.Color.WHITE).apply {
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+        }
         lifetimeBlock.addView(lifetimeValue)
         summary.addView(lifetimeBlock, LinearLayout.LayoutParams(0, -2, 1f))
         cycleValue = label("", 16f, getColorCompat(com.reflex.widgethub.R.color.red_accent)).apply {
             gravity = Gravity.CENTER
         }
         summary.addView(cycleValue, LinearLayout.LayoutParams(dp(54), -1))
-        content.addView(summary, fullWidth().apply { topMargin = dp(12) })
+        content.addView(summary, fullWidth().apply { topMargin = dp(18) })
 
         currentValue = label("0", 72f, android.graphics.Color.WHITE).apply {
             gravity = Gravity.CENTER
-            setPadding(0, dp(20), 0, dp(4))
+            setPadding(0, dp(28), 0, 0)
             typeface = android.graphics.Typeface.DEFAULT_BOLD
         }
-        content.addView(currentValue, fullWidth())
+        content.addView(currentValue, fullWidth().apply { topMargin = dp(18) })
         val reciteLabel = label("CURRENT COUNT", 11f, android.graphics.Color.GRAY).apply {
             gravity = Gravity.CENTER
         }
-        content.addView(reciteLabel, fullWidth())
+        content.addView(reciteLabel, fullWidth().apply { topMargin = dp(4) })
         progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
             progress = 0
@@ -120,7 +123,8 @@ class MainActivity : AppCompatActivity() {
             progressBackgroundTintList = android.content.res.ColorStateList.valueOf(getColorCompat(R.color.surface_high))
         }
         content.addView(progressBar, fullWidth().apply {
-            topMargin = dp(16)
+            topMargin = dp(14)
+            bottomMargin = dp(4)
             leftMargin = dp(18)
             rightMargin = dp(18)
         })
@@ -137,7 +141,9 @@ class MainActivity : AppCompatActivity() {
             stateListAnimator = null
         }
         goalButton.setOnClickListener { showGoalPicker() }
-        controls.addView(goalButton, LinearLayout.LayoutParams(0, dp(48), 1f))
+        controls.addView(goalButton, LinearLayout.LayoutParams(0, dp(52), 1f).apply {
+            rightMargin = dp(5)
+        })
         val tapButton = Button(this).apply {
             text = "RECITE +1"
             textSize = 13f
@@ -146,7 +152,10 @@ class MainActivity : AppCompatActivity() {
             stateListAnimator = null
             setOnClickListener { counterStore.update(::increment).also { renderCounter(it); TasbeehWidgetProvider.refreshAllWidgets(this@MainActivity) } }
         }
-        controls.addView(tapButton, LinearLayout.LayoutParams(0, dp(48), 1.2f))
+        controls.addView(tapButton, LinearLayout.LayoutParams(0, dp(52), 1.2f).apply {
+            leftMargin = dp(5)
+            rightMargin = dp(5)
+        })
         val resetButton = Button(this).apply {
             text = "RESET"
             textSize = 12f
@@ -155,12 +164,17 @@ class MainActivity : AppCompatActivity() {
             stateListAnimator = null
             setOnClickListener { counterStore.update(::resetCurrent).also { renderCounter(it); TasbeehWidgetProvider.refreshAllWidgets(this@MainActivity) } }
         }
-        controls.addView(resetButton, LinearLayout.LayoutParams(0, dp(48), 1f))
-        content.addView(controls, fullWidth().apply { topMargin = dp(12) })
+        controls.addView(resetButton, LinearLayout.LayoutParams(0, dp(52), 1f).apply {
+            leftMargin = dp(5)
+        })
+        content.addView(controls, fullWidth().apply { topMargin = dp(18) })
 
-        content.addView(sectionTitle("DAILY REMINDERS"), fullWidth().apply { topMargin = dp(28) })
+        content.addView(sectionTitle("DAILY REMINDERS"), fullWidth().apply {
+            topMargin = dp(36)
+            bottomMargin = dp(10)
+        })
         content.addView(reminderRow(ReminderType.TASBIH_FATIMA, "Tasbih-e-Fatima", "Subhan Allah 33 • Alhamdulillah 33 • Allahu Akbar 34"), fullWidth())
-        content.addView(reminderRow(ReminderType.DUROOD, "Durood — 100 times", "Allahumma salli wa sallim 'ala Muhammad"), fullWidth().apply { topMargin = dp(8) })
+        content.addView(reminderRow(ReminderType.DUROOD, "Durood — 100 times", "Allahumma salli wa sallim 'ala Muhammad"), fullWidth().apply { topMargin = dp(12) })
         val note = label("Short wording shown for convenience; the longer Durood Ibrahimiyyah is also a complete form.", 11f, android.graphics.Color.GRAY)
         note.setPadding(dp(4), dp(10), dp(4), 0)
         content.addView(note, fullWidth())
@@ -173,13 +187,15 @@ class MainActivity : AppCompatActivity() {
         val settings = reminderStore.get(type)
         val card = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(12), dp(16), dp(12))
+            setPadding(dp(18), dp(16), dp(18), dp(16))
             setBackgroundResource(R.drawable.bg_expressive_card)
         }
         val top = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
         val textBlock = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         textBlock.addView(label(title, 15f, android.graphics.Color.WHITE))
-        textBlock.addView(label(subtitle, 11f, android.graphics.Color.GRAY))
+        textBlock.addView(label(subtitle, 11f, getColorCompat(R.color.text_muted)).apply {
+            setLineSpacing(dp(2).toFloat(), 1f)
+        })
         top.addView(textBlock, LinearLayout.LayoutParams(0, -2, 1f))
         val toggle = Switch(this).apply {
             isChecked = settings.enabled
@@ -200,7 +216,7 @@ class MainActivity : AppCompatActivity() {
             stateListAnimator = null
             setOnClickListener { showTimePicker(type, timeButton) }
         }
-        card.addView(timeButton, LinearLayout.LayoutParams(-1, dp(42)).apply { topMargin = dp(8) })
+        card.addView(timeButton, LinearLayout.LayoutParams(-1, dp(46)).apply { topMargin = dp(12) })
         return card
     }
 
@@ -238,7 +254,6 @@ class MainActivity : AppCompatActivity() {
 
     fun renderCounter(state: CounterState) {
         if (!::currentValue.isInitialized) return
-        currentValue.text = state.currentCount.toString()
         lifetimeValue.text = state.lifetimeTotal.toString()
         goalButton.text = "GOAL ${state.goal}"
         cycleValue.text = completedCycleLabel(state) ?: "+0"
