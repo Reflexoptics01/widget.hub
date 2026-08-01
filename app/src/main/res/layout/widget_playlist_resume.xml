@@ -1,8 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/playlist_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@drawable/bg_playlist_widget"
+    android:padding="0dp">
 
     <ImageView
         android:id="@+id/playlist_art"
@@ -10,89 +12,165 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_tadabbur_icon"
-        android:contentDescription="Playlist artwork" />
+        android:contentDescription="@string/playlist_resume_widget_description" />
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/bg_playlist_overlay">
-        <TextView
-            android:id="@+id/playlist_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:text="PLAYLIST RESUME"
-            android:textColor="@color/white"
-            android:textSize="11sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/playlist_index"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="EP 1"
-            android:textColor="@color/red_accent"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:layout_height="96dp"
+        android:layout_gravity="top"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_playlist_scrim_top"
+        android:contentDescription="@null" />
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_gravity="bottom"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_playlist_scrim_bottom"
+        android:contentDescription="@null" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:background="@drawable/bg_playlist_overlay">
-        <ProgressBar
-            android:id="@+id/playlist_progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/progress_wavy"
-            android:progressDrawable="@drawable/progress_wavy" />
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/playlist_resume"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_weight="1.2"
-                android:text="RESUME"
-                android:textColor="@color/white"
-                android:textSize="10sp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/playlist_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_playlist_chip"
+                android:text="@string/playlist_ready"
+                android:textColor="@color/red_accent"
+                android:textSize="9sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_expressive_control" />
-            <Button
-                android:id="@+id/playlist_next"
+                android:letterSpacing="0.08" />
+
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:text="NEXT"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_control" />
-            <Button
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
                 android:id="@+id/playlist_clear"
-                android:layout_width="0dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="0.75"
-                android:text="CLEAR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/bg_playlist_clear"
+                android:text="@string/playlist_clear"
                 android:textColor="@color/white"
                 android:textSize="9sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_control" />
+                android:alpha="0.85" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/playlist_index"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="—"
+            android:textColor="@color/white"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.03"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/playlist_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@string/playlist_empty_title"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:lineSpacingExtra="2dp" />
+
+        <TextView
+            android:id="@+id/playlist_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@string/playlist_empty_hint"
+            android:textColor="@color/text_muted"
+            android:textSize="9sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/playlist_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/playlist_prev"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight="0.85"
+                android:text="@string/playlist_prev"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_playlist_nav"
+                android:stateListAnimator="@null"
+                android:elevation="0dp" />
+
+            <Button
+                android:id="@+id/playlist_resume"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1.4"
+                android:text="@string/playlist_play"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_playlist_play"
+                android:stateListAnimator="@null"
+                android:elevation="0dp" />
+
+            <Button
+                android:id="@+id/playlist_next"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="0.85"
+                android:text="@string/playlist_next"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_playlist_nav"
+                android:stateListAnimator="@null"
+                android:elevation="0dp" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

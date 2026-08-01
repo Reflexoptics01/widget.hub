@@ -13,4 +13,14 @@ class HapticFeedbackTest {
     fun uses_long_feedback_for_goal_tap() {
         assertEquals(120L, hapticDurationMillis(goalReached = true))
     }
+
+    @Test
+    fun uses_medium_amplitude_for_normal_tap() {
+        assertEquals(160, hapticAmplitude(goalReached = false))
+    }
+
+    @Test
+    fun uses_max_amplitude_for_goal_tap() {
+        assertEquals(255, hapticAmplitude(goalReached = true))
+    }
 }

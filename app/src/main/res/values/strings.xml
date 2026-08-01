@@ -3,4 +3,11 @@
     <string name="tasbeeh_widget_description">Tadabbur tasbeeh counter</string>
     <string name="playlist_resume_widget_description">Playlist Resume</string>
     <string name="playlist_resume_share_label">Save to Playlist Resume</string>
+    <string name="playlist_empty_title">Share a video to begin</string>
+    <string name="playlist_empty_hint">Then paste playlist URL in the app</string>
+    <string name="playlist_ready">READY</string>
+    <string name="playlist_play">PLAY</string>
+    <string name="playlist_next">NEXT</string>
+    <string name="playlist_prev">PREV</string>
+    <string name="playlist_clear">CLEAR</string>
 </resources>

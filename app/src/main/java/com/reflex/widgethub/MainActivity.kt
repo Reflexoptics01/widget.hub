@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity() {
             setBackgroundResource(R.drawable.bg_expressive_card)
         }
         val savedTitle = label(
-            state.title.ifBlank { "Share a video to save your current episode" },
+            state.title.ifBlank { "Share a video, then link its playlist" },
             14f,
             android.graphics.Color.WHITE
         )
@@ -255,16 +255,30 @@ class MainActivity : AppCompatActivity() {
         savedTitle.ellipsize = android.text.TextUtils.TruncateAt.END
         card.addView(savedTitle, fullWidth())
         card.addView(label(
-            "Use ReVanced Share → Save to Playlist Resume. No login or background monitoring.",
+            "Vanced share is usually youtu.be with no list=. Share the episode video, paste playlist URL once, set EP number. Next then fetches the real next video id (not a fake link).",
             11f,
             getColorCompat(R.color.text_muted)
         ), fullWidth().apply { topMargin = dp(5) })
+
+        card.addView(label("PLAYLIST URL OR ID", 11f, getColorCompat(R.color.text_muted)), fullWidth().apply { topMargin = dp(14) })
+        val playlistInput = android.widget.EditText(this).apply {
+            setText(state.playlistId)
+            setTextColor(android.graphics.Color.WHITE)
+            textSize = 13f
+            hint = "youtube.com/playlist?list=… or PLxxxx"
+            setHintTextColor(0x66FFFFFF)
+            setSelectAllOnFocus(true)
+            background = getDrawableCompat(R.drawable.bg_control)
+            setPadding(dp(12), dp(12), dp(12), dp(12))
+            maxLines = 3
+        }
+        card.addView(playlistInput, fullWidth().apply { topMargin = dp(6) })
 
         val episodeRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        episodeRow.addView(label("STARTING EPISODE", 11f, getColorCompat(R.color.text_muted)), LinearLayout.LayoutParams(0, dp(46), 1f))
+        episodeRow.addView(label("CURRENT EP", 11f, getColorCompat(R.color.text_muted)), LinearLayout.LayoutParams(0, dp(46), 1f))
         val indexInput = android.widget.EditText(this).apply {
             setText(state.index.toString())
             setTextColor(android.graphics.Color.WHITE)
@@ -275,18 +289,40 @@ class MainActivity : AppCompatActivity() {
             background = getDrawableCompat(R.drawable.bg_control)
             setPadding(dp(12), 0, dp(12), 0)
         }
-        episodeRow.addView(indexInput, LinearLayout.LayoutParams(dp(92), dp(46)).apply { leftMargin = dp(10) })
-        card.addView(episodeRow, fullWidth().apply { topMargin = dp(14) })
+        episodeRow.addView(indexInput, LinearLayout.LayoutParams(dp(72), dp(46)).apply { leftMargin = dp(8) })
+        episodeRow.addView(label("OF", 11f, getColorCompat(R.color.text_muted)).apply {
+            gravity = Gravity.CENTER
+        }, LinearLayout.LayoutParams(dp(28), dp(46)).apply { leftMargin = dp(6) })
+        val totalInput = android.widget.EditText(this).apply {
+            setText(if (state.totalCount > 0) state.totalCount.toString() else "")
+            setTextColor(android.graphics.Color.WHITE)
+            textSize = 14f
+            gravity = Gravity.CENTER
+            hint = "total"
+            setHintTextColor(0x66FFFFFF)
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            setSelectAllOnFocus(true)
+            background = getDrawableCompat(R.drawable.bg_control)
+            setPadding(dp(12), 0, dp(12), 0)
+        }
+        episodeRow.addView(totalInput, LinearLayout.LayoutParams(dp(72), dp(46)).apply { leftMargin = dp(6) })
+        card.addView(episodeRow, fullWidth().apply { topMargin = dp(12) })
 
         val setButton = Button(this).apply {
-            text = "SET STARTING EPISODE"
+            text = "SAVE PLAYLIST + EPISODE"
             textSize = 11f
             setTextColor(android.graphics.Color.WHITE)
             background = getDrawableCompat(R.drawable.bg_expressive_control)
             stateListAnimator = null
             setOnClickListener {
                 val index = indexInput.text.toString().toIntOrNull() ?: return@setOnClickListener
-                store.setStartingIndex(index)
+                val total = totalInput.text.toString().toIntOrNull() ?: 0
+                store.setPlaylistId(playlistInput.text.toString())
+                store.setCurrentIndex(index)
+                store.setTotalCount(total)
+                val updated = store.load()
+                playlistInput.setText(updated.playlistId)
+                savedTitle.text = updated.title.ifBlank { "Episode $index" }
                 PlaylistResumeWidgetProvider.refreshAllWidgets(this@MainActivity)
             }
         }
@@ -300,8 +336,10 @@ class MainActivity : AppCompatActivity() {
             stateListAnimator = null
             setOnClickListener {
                 store.clear()
-                savedTitle.text = "Share a video to save your current episode"
+                savedTitle.text = "Share a video, then link its playlist"
+                playlistInput.setText("")
                 indexInput.setText("1")
+                totalInput.setText("")
                 PlaylistResumeWidgetProvider.refreshAllWidgets(this@MainActivity)
             }
         }

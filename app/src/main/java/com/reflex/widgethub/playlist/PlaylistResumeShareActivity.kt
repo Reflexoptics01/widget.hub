@@ -2,8 +2,8 @@ package com.reflex.widgethub.playlist
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.reflex.widgethub.R
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -13,14 +13,31 @@ class PlaylistResumeShareActivity : AppCompatActivity() {
         val sharedText = intent.getStringExtra(android.content.Intent.EXTRA_TEXT).orEmpty()
         val link = PlaylistResumeParser.parse(sharedText)
         if (link == null) {
+            toast("Not a YouTube video or playlist link")
             finish()
             return
         }
 
         val title = intent.getStringExtra(android.content.Intent.EXTRA_TITLE).orEmpty()
         val store = PlaylistResumeStore(this)
-        val saved = store.saveShared(link, title, extractUrl(sharedText))
+        val sharedUrl = extractUrl(sharedText)
+        val saved = store.saveShared(link, title, sharedUrl)
         PlaylistResumeWidgetProvider.refreshAllWidgets(this)
+
+        when {
+            saved.hasPlaylist && saved.hasVideo ->
+                toast("Saved episode ${saved.index} · Next enabled")
+            saved.hasPlaylist && !saved.hasVideo ->
+                toast("Playlist linked · set episode number in app")
+            saved.hasVideo && !saved.hasPlaylist ->
+                toast("Video saved · paste playlist URL in app for Next")
+            else -> toast("Saved")
+        }
+
+        if (saved.videoId.isBlank()) {
+            finish()
+            return
+        }
         Thread {
             downloadThumbnail(store, saved.videoId)
             runOnUiThread {
@@ -54,4 +71,8 @@ class PlaylistResumeShareActivity : AppCompatActivity() {
         ?.value
         ?.trimEnd('.', ',', '!', ')', ']', '>')
         .orEmpty()
+
+    private fun toast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+    }
 }

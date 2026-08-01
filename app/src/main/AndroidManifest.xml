@@ -43,6 +43,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.reflex.widgethub.playlist.RESUME" />
                 <action android:name="com.reflex.widgethub.playlist.NEXT" />
+                <action android:name="com.reflex.widgethub.playlist.PREV" />
                 <action android:name="com.reflex.widgethub.playlist.CLEAR" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/playlist_resume_widget_info" />
