@@ -1,0 +1,8 @@
+package com.reflex.widgethub.ui
+
+import com.reflex.widgethub.domain.CounterState
+import com.reflex.widgethub.domain.completedCycles
+
+fun completedCycleLabel(state: CounterState): String? = completedCycles(state)
+    .takeIf { it > 0 }
+    ?.let { "+$it" }
