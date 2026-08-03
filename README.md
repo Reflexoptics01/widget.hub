@@ -1,6 +1,14 @@
-# Widget Hub — Tasbeeh Counter
+# Widget Hub — Tadabbur.widget
 
-This build adds lifetime counting and daily reminders to the Tasbeeh widget.
+## Download APK
+
+Latest build is on **GitHub Releases** (easiest download):
+
+**https://github.com/Reflexoptics01/widget.hub/releases/latest**
+
+Direct APK: [Tadabbur-widget-v11.0-playlist-resume.apk](https://github.com/Reflexoptics01/widget.hub/releases/download/v11.0-playlist-resume/Tadabbur-widget-v11.0-playlist-resume.apk)
+
+Also mirrored in the repo under `release/`.
 
 ## Behavior
 
@@ -20,6 +28,14 @@ Enable either reminder in the main app and choose its time:
 
 Android notification permission must be allowed for notifications to appear. Reminders are rescheduled after reboot and time-zone changes.
 
+## Playlist Resume
+
+- Share a video from Vanced/YouTube → **Save to Playlist Resume**.
+- If the share URL has no `list=`, paste the playlist URL once in the app.
+- Set the current episode number, then use **Next** / **Prev** on the widget.
+- Next resolves the real next video id (not a fake link).
+
 ## Widget
 
-The widget is 2×2 by default and can be resized horizontally or vertically. If replacing an older APK signed with another key, uninstall the old Widget Hub first, then install this APK and add the widget again.
+Widgets are 2×2 by default and can be resized horizontally or vertically. If replacing an older APK signed with another key, uninstall the old app first, then install this APK and add the widgets again.
+
